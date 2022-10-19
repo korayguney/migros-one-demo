@@ -1,4 +1,4 @@
-package com.migros.migrosonedemo.service;
+package com.migros.migrosonedemo.service.impl;
 
 import com.migros.migrosonedemo.model.CourierTrackerEntity;
 import com.migros.migrosonedemo.model.LocationEntity;
@@ -7,6 +7,7 @@ import com.migros.migrosonedemo.model.dto.CourierTracker;
 import com.migros.migrosonedemo.model.dto.Location;
 import com.migros.migrosonedemo.repository.CourierTrackerRepository;
 import com.migros.migrosonedemo.repository.StoreRepository;
+import com.migros.migrosonedemo.service.ICourierTrackerService;
 import com.migros.migrosonedemo.utils.DistanceCalculator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,16 +21,16 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CourierTrackerService {
+public class CourierTrackerService implements ICourierTrackerService {
 
     private final StoreRepository storeRepository;
     private final CourierTrackerRepository trackerRepository;
 
+    @Override
     @Transactional
     public String trackCourier(CourierTracker courierTracker) {
         LocalDateTime currentDateTime = LocalDateTime.now();
@@ -67,12 +68,11 @@ public class CourierTrackerService {
     }
 
     private CourierTrackerEntity prepareCourierTrackerEntity(int courierId, Location location, StoreEntity store, LocalDateTime currentDateTime) {
-        LocationEntity locationEntity = new LocationEntity(location.getLatitude(), location.getLongitude());
         return CourierTrackerEntity.builder()
                 .courierId(courierId)
                 .storeEntity(store)
                 .enteredDate(currentDateTime)
-                .location(locationEntity)
+                .location(new LocationEntity(location.getLatitude(), location.getLongitude()))
                 .build();
     }
 
@@ -82,13 +82,13 @@ public class CourierTrackerService {
         return storeRepository.findAll();
     }
 
+    @Override
+    @Transactional(readOnly = true)
     public double calculateTotalTravelDistanceOfCourier(int courierId) {
         List<CourierTrackerEntity> courierTrackerList = trackerRepository.findByCourierId(courierId);
-        //return courierTrackerEntityList.stream().map(courierTrackerEntity -> courierTrackerEntity.getLocation())
-        //        .reduce(0.0, (c1, c2) -> c1 + DistanceCalculator.calculateDistanceInMeters(c1.getLatitude(), c1.getLongitude(), c2.getLatitude(), c2.getLongitude()), Double::sum);
         double totalDistance = 0.0;
         for (int i = 0; i < courierTrackerList.size(); i++) {
-            if(i+1 < courierTrackerList.size()) {
+            if (i + 1 < courierTrackerList.size()) {
                 totalDistance += DistanceCalculator.calculateDistanceInMeters(
                         courierTrackerList.get(i).getLocation().getLatitude(),
                         courierTrackerList.get(i).getLocation().getLongitude(),

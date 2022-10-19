@@ -1,7 +1,7 @@
 package com.migros.migrosonedemo.controller;
 
 import com.migros.migrosonedemo.model.dto.CourierTracker;
-import com.migros.migrosonedemo.service.CourierTrackerService;
+import com.migros.migrosonedemo.service.impl.CourierTrackerValidatorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CourierTrackerController {
 
-    private final CourierTrackerService trackerService;
+    private final CourierTrackerValidatorService validatorService;
 
     @GetMapping("/courier/{courierId}")
     public double calculateTotalTravelDistanceOfCourier(@PathVariable int courierId) {
-        return trackerService.calculateTotalTravelDistanceOfCourier(courierId);
+        return validatorService.calculateTotalTravelDistanceOfCourier(courierId);
     }
 
     @PostMapping("/courier")
     public String trackCourier(@RequestBody CourierTracker courierTracker) {
-        return trackerService.trackCourier(courierTracker);
+        return validatorService.trackCourier(courierTracker);
     }
 }
