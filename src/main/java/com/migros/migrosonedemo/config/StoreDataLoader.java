@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
 @RequiredArgsConstructor
-public class InitializeConfigurer implements CommandLineRunner {
+public class StoreDataLoader implements CommandLineRunner {
 
     @Value("classpath:data/stores.json")
     Resource resourceFile;
@@ -38,7 +38,6 @@ public class InitializeConfigurer implements CommandLineRunner {
 
     public StoreEntity prepareStoreEntity(String storeName, double lat, double lng) {
         LocationEntity location = new LocationEntity(lat, lng);
-        StoreEntity store = new StoreEntity(storeName, location);
-        return store;
+        return new StoreEntity(storeName, location);
     }
 }
