@@ -1,5 +1,6 @@
 ![MigrosOne-CI](https://github.com/korayguney/migros-one-demo/actions/workflows/maven.yml/badge.svg?branch=master)
 
+
 Demo Application for Migros One Company
 --------------------------------------
 This  application is prepared for the "**Migros One Company**" job task. This application is a simple Courier Tracking service application which is able to track geolocations of couriers.
