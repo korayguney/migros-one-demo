@@ -1,5 +1,3 @@
-![MigrosOne-CI](https://github.com/korayguney/migros-one-demo/actions/workflows/maven.yml/badge.svg?branch=master)
-
 
 Demo Application for Migros One Company
 --------------------------------------
